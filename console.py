@@ -22,6 +22,9 @@ class Console(cmd.Cmd):
         this will quit the program
         """
         return True
+        
+    def postloop(self):
+        print()
     
 if __name__ == "__main__":
     Console().cmdloop()
