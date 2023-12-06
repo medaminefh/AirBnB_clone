@@ -14,15 +14,13 @@ class BaseModel():
     def __init__(self, *args, **kwargs):
         frmt = "%Y-%m-%dT%H:%M:%S.%f"
         if len(kwargs) != 0:
-            for key in kwargs:
-                if key == "created_at" or key == "updated_at":
-                    self.__dict__[key] = datetime.strptime(kwargs[key], frmt)
-                else:
-                    self.__dict__[key] = kwargs[key]
+            for key, value in kwargs.items():
+                self.id = str(uuid.uuid4())
+                self.created_at = datetime.now()
+                self.__dict__[key] = value
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
-            self.updated_at = datetime.now()
 
     def __str__(self):
         ''' str representstion '''
