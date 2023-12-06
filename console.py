@@ -5,7 +5,7 @@ This is the entry file of our program
 
 import cmd
 
-class Console(cmd.Cmd):
+class HBNBCommand(cmd.Cmd):
     """
     This is the console class of our program (the interpreter)
     """
@@ -19,7 +19,7 @@ class Console(cmd.Cmd):
         
     def do_quit(self, _):
         """
-        this will quit the program
+        Quit command to exit the program
         """
         return True
         
@@ -27,4 +27,4 @@ class Console(cmd.Cmd):
         print()
     
 if __name__ == "__main__":
-    Console().cmdloop()
+    HBNBCommand().cmdloop()
