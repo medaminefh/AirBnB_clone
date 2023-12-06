@@ -7,6 +7,7 @@ This is the BaseModel file
 import uuid
 from datetime import datetime
 
+
 class BaseModel():
     ''' Represent the class model
     '''
@@ -27,20 +28,19 @@ class BaseModel():
         ''' str representstion '''
         clname = self.__class__.__name__
         return "[{}] ({}) {}".format(clname, self.id, self.__dict__)
-    
+
     def save(self):
-        ''' updates the public instance attribute 
-             updated_at with the current datetime
+        ''' updates the public instance attribute
+        updated_at with the current datetime
         '''
         self.updated_at = datetime.now()
 
-    
     def to_dict(self):
         '''
         returns a dictionary containing all keys/values of __dict__
         '''
         mydict = self.__dict__.copy()
         mydict["__class__"] = self.__class__.__name__
-        mydict["created_at"] =  mydict["created_at"].isoformat()
+        mydict["created_at"] = mydict["created_at"].isoformat()
         mydict["updated_at"] = mydict["updated_at"].isoformat()
         return mydict
