@@ -3,7 +3,7 @@
 file storage engine
 '''
 import json
-import os.path
+import os
 
 
 class FileStorage():
@@ -14,21 +14,34 @@ class FileStorage():
 
     def all(self):
         '''  Return the dictionary '''
-        return self.__objects
+        return FileStorage.__objects
 
     def new(self, obj):
         '''  sets in __objects the obj with key '''
-        key = "<{}>.{}".format(obj.__class__, obj.id)
-        self.__objects[key] = obj
+        key = "<{}>.{}".format(obj.__class__.__name__, obj.id)
+        FileStorage.__objects[key] = obj
 
     def save(self):
-        ''' '''
-        serilizer = json.dumps(self.__objects)
-        with open(self.__file_path, 'w') as f:
-            return f.write(serilizer)
+        ''' save the objects'''
+        with open(FileStorage.__file_path, 'w', encoding="UTF-8") as f:
+            dictionay = {key: value.to_dict()
+                         for key, value in FileStorage.__objects.items()}
+            json.dump(dictionay, f)
+
+    def originalClass(self):
+        """
+        return the original class specified
+        """
+        from models.base_model import BaseModel
+
+        return {"BaseModel": BaseModel}
 
     def reload(self):
-        ''' '''
-        if os.path.isfile(__file_path):
-            with open(self.__file_path, "r") as f:
-                self.__objects = json.load(f)
+        ''' reload from file'''
+        if os.path.isfile(FileStorage.__file_path):
+            with open(FileStorage.__file_path, "r", encoding="UTF-8") as f:
+                objects = json.load(f)
+                objects = {key:
+                           self.originalClass()[value["__class__"]](**value)
+                           for key, value in objects.items()}
+                FileStorage.__objects = objects
