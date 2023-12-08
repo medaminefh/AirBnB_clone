@@ -3,7 +3,7 @@
 file storage engine
 '''
 import json
-import os.path
+import os
 
 
 class FileStorage():
@@ -23,7 +23,6 @@ class FileStorage():
 
     def save(self):
         ''' save the objects'''
-        print(FileStorage.__objects)
         with open(FileStorage.__file_path, 'w', encoding="UTF-8") as f:
             dictionay = {key: value.to_dict()
                          for key, value in FileStorage.__objects.items()}
@@ -42,7 +41,7 @@ class FileStorage():
         if os.path.isfile(FileStorage.__file_path):
             with open(FileStorage.__file_path, "r", encoding="UTF-8") as f:
                 objects = json.load(f)
-                objects = {key: self.originalClass()[value["__class__"]](**value)
+                objects = {key:
+                           self.originalClass()[value["__class__"]](**value)
                            for key, value in objects.items()}
-                print("__objects", FileStorage.__objects)
                 FileStorage.__objects = objects

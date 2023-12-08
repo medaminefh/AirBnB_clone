@@ -18,8 +18,8 @@ class BaseModel():
             for key, value in kwargs.items():
                 if key == "created_at" or key == "updated_at":
                     self.__dict__[key] = datetime.strptime(value, frmt)
-
-                self.__dict__[key] = value
+                else:
+                    self.__dict__[key] = value
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
