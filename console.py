@@ -55,7 +55,7 @@ class HBNBCommand(cmd.Cmd):
         commands = line.split()
         all_instances = storage.all()
 
-        if not commands[0]:
+        if not line:
             print('** class name missing **')
             return
         elif commands[0] not in storage.originalClass():
@@ -80,7 +80,7 @@ class HBNBCommand(cmd.Cmd):
 
         commands = line.split()
 
-        if not commands[0]:
+        if not line:
             print('** class name missing **')
             return
         elif commands[0] not in storage.originalClass():
