@@ -4,7 +4,7 @@ This is the entry file of our program
 """
 
 import cmd
-from models.base_model import BaseModel
+import re
 from models import storage
 
 
@@ -39,11 +39,11 @@ class HBNBCommand(cmd.Cmd):
         if not line:
             print("** class name missing **")
             return
-        if line != "BaseModel":
+        if line not in storage.originalClass():
             print("** class doesn't exist **")
             return
 
-        instance = BaseModel()
+        instance = storage.originalClass()[line]()
         instance.save()
         print(instance.id)
 
@@ -52,28 +52,51 @@ class HBNBCommand(cmd.Cmd):
         show us the string rep of the class
         """
 
-        class_name, class_id = line.split()
+        commands = line.split()
         all_instances = storage.all()
-        key = "<{}>.{}".format(class_name, class_id)
 
-        # TODO: this is not working
-        obj = all_instances.get(key).to_dict()
-        obj = {key: obj[key] for key in obj if key != "__class__"}
-
-        if not class_name:
+        if not commands[0]:
             print('** class name missing **')
             return
-        elif class_name != "BaseModel":
+        elif commands[0] not in storage.originalClass():
             print("** class doesn't exist **")
             return
-        elif not class_id:
+        elif len(commands) < 2:
             print("** instance id missing **")
             return
-        elif not obj:
+
+        key = "<{}>.{}".format(commands[0], commands[1])
+        obj = all_instances.get(key)
+        if not obj:
             print("** no instance found **")
             return
         else:
             print(obj)
+
+    def do_destroy(self, line):
+        """
+        destroy an instance from the file
+        """
+
+        commands = line.split()
+
+        if not commands[0]:
+            print('** class name missing **')
+            return
+        elif commands[0] not in storage.originalClass():
+            print("** class doesn't exist **")
+            return
+        elif len(commands) < 2:
+            print("** instance id missing **")
+            return
+        else:
+            all_instances = storage.all()
+            key = "<{}>.{}".format(commands[0], commands[1])
+            if not all_instances.get(key):
+                print("** no instance found **")
+                return
+            del all_instances[key]
+            storage.save()
 
     def do_all(self, line):
         """
@@ -81,10 +104,53 @@ class HBNBCommand(cmd.Cmd):
         """
 
         all_instances = storage.all()
-        if not line:
-            print(all_instances)
+        if not line or line == ".":
+            list_obj = [str(obj) for _, obj in all_instances.items()]
+            print(list_obj)
+            return
         else:
-            print("filter the instances of", line)
+            if line not in storage.originalClass():
+                print("** class doesn't exist **")
+                return
+            list_obj = [str(obj) for _, obj in all_instances.items()
+                        if type(obj).__name__ == line]
+            print(list_obj)
+
+    def do_update(self, line):
+        """
+        update an instance attr from its name and id
+        """
+        regex = r'^(\S+)(?:\s(\S+)(?:\s(\S+)(?:\s((?:"[^"]*")|(?:(\S)+)))?)?)?'
+        match = re.search(regex, line)
+        classname = match.group(1)
+        class_id = match.group(2)
+        attr = match.group(3)
+        value = match.group(4)
+
+        if not match:
+            print('** class name missing **')
+            return
+        if classname not in storage.originalClass():
+            print("** class doesn't exist **")
+            return
+        if not class_id:
+            print("** instance id missing **")
+            return
+        all_instances = storage.all()
+        key = "<{}>.{}".format(classname, class_id)
+        instance = all_instances.get(key)
+        if not instance:
+            print("** no instance found **")
+            return
+        if not attr:
+            print("** attribute name missing **")
+            return
+        if not value:
+            print("** value missing **")
+            return
+
+        setattr(instance, attr, value.replace('"', ""))
+        storage.save()
 
 
 if __name__ == "__main__":

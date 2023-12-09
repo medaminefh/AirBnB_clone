@@ -33,7 +33,7 @@ class FileStorage():
         return the original class specified
         """
         from models.base_model import BaseModel
-        from models.usr import User
+        from models.user import User
         from models.state import State
         from models.city import City
         from models.amenity import Amenity
@@ -41,11 +41,11 @@ class FileStorage():
         from models.review import Review
 
         My_classes = {"BaseModel": BaseModel, "User": User,
-        "State": State,
-        "City": City,
-        "Amenity": Amenity,
-        "Place": Place,
-        "Review": Review}
+                      "State": State,
+                      "City": City,
+                      "Amenity": Amenity,
+                      "Place": Place,
+                      "Review": Review}
         return My_classes
 
     def reload(self):
