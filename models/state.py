@@ -4,7 +4,5 @@ from models.base_model import BaseModel
 
 
 class State(BaseModel):
-    ''' Repesent class Review '''
-    place_id = ""
-    user_id = ""
-    text = ""
+    ''' Repesent class State '''
+    name = ""
