@@ -32,6 +32,11 @@ class HBNBCommand(cmd.Cmd):
         """
         print()
 
+    def emptyline(self):
+        """ Pass if you hit enter.
+        """
+        pass
+
     def do_create(self, line):
         """
         create an instance of the BaseModel
